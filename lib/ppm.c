@@ -18,43 +18,61 @@
 #define PPM_ALPHA8 4
 #define PPM_ALPHA4 5
 
+//! ppm文件结构
 struct ppm {
-	int type;
-	int depth;
-	int step;
-	int width;
-	int height;
-	uint8_t *buffer;
+	int type;               //! 文件类型
+	int depth;              //! 图片 深度
+	int step;               //! 步长
+	int width;              //! 图片宽度
+	int height;             //! 图片高度 
+	uint8_t *buffer;        //! 图片内容buffer
 };
 
 #define LINEMAX 128
 
+//! 
 static char *
 readline(FILE *f, char *buffer) {
+	//! 为什么是 for 循环 为了跳过 '#'开头的行？
 	for (;;) {
 		char * ret = fgets(buffer, LINEMAX, f);
+		
+		//! 读不到 返回 NULL
 		if (ret == NULL) {
 			return NULL;
 		}
-		if (ret[0] != '#') {
+
+		if (ret[0] != '#') {          //! # 是注释？
 			return ret;
 		}
 	}
 }
 
+
+//! 读取 ppm 文件头
 static int
 ppm_header(FILE *f, struct ppm *ppm) {
+
 	char tmp[LINEMAX];
 	char *line = readline(f, tmp);
+	//! 读取不到
 	if (line == NULL)
 		return 0;
+
+	//! 获取 ppm的图片类型
 	char c = 0;
 	sscanf(line, "P%c", &c);
 	ppm->type = c;
+
+	//! 读取 下一行
 	line = readline(f, tmp);
 	if (line == NULL)
 		return 0;
+
+	//! 读取 图片的高度 宽度
 	sscanf(line, "%d %d", &(ppm->width), &(ppm->height));
+
+	//! 读取 图片深度
 	line = readline(f, tmp);
 	if (line == NULL)
 		return 0;
@@ -62,18 +80,19 @@ ppm_header(FILE *f, struct ppm *ppm) {
 	return 1;
 }
 
+//! 读取 ppm 文件内容
 static int
 ppm_data(struct ppm *ppm, FILE *f, int id, int skip) {
 	int i;
-	int n = ppm->width * ppm->height;
-	uint8_t * buffer = ppm->buffer + skip;
+	int n = ppm->width * ppm->height;               //! 长度 X 宽度 = 所有像素
+	uint8_t * buffer = ppm->buffer + skip;          //! review 这个skip感觉有问题， 只在buffer开头skip？
 	uint8_t * tmp;
-	int step = ppm->step;
+	int step = ppm->step;                           //! 步长
 	switch(id) {
 	case '3':	// RGB text
 		for (i=0;i<n;i++) {
 			int r,g,b;
-			fscanf(f, "%d %d %d", &r,&g,&b);
+			fscanf(f, "%d %d %d", &r,&g,&b);        //! RGB 读取
 			buffer[i*step+0] = (uint8_t)r;
 			buffer[i*step+1] = (uint8_t)g;
 			buffer[i*step+2] = (uint8_t)b;
@@ -82,12 +101,12 @@ ppm_data(struct ppm *ppm, FILE *f, int id, int skip) {
 	case '2':	// ALPHA text
 		for (i=0;i<n;i++) {
 			int alpha;
-			fscanf(f, "%d", &alpha);
+			fscanf(f, "%d", &alpha);                 //! 读取 alpha通道
 			buffer[i*step] = (uint8_t)alpha;
 		}
 		break;
-	case '6':	// RGB binary
-		tmp = (uint8_t *)malloc(n * 3);
+	case '6':	// RGB binary                        //! 读取 RGB
+		tmp = (uint8_t *)malloc(n * 3);              //! 分配 像素 存储的空间  每个像素 占3个字节
 		if (fread(tmp, n*3, 1, f)==0) {
 			free(tmp);
 			return 0;
@@ -99,7 +118,7 @@ ppm_data(struct ppm *ppm, FILE *f, int id, int skip) {
 		}
 		free(tmp);
 		break;
-	case '5':	// ALPHA binary
+	case '5':	// ALPHA binary                     //! 读取 alpha通道 
 		tmp = (uint8_t *)malloc(n);
 		if (fread(tmp, n, 1, f)==0) {
 			free(tmp);
@@ -116,19 +135,28 @@ ppm_data(struct ppm *ppm, FILE *f, int id, int skip) {
 	return 1;
 }
 
+//! 从两个文件(RGB文件 alpha通道文件) 读取图片信息
 static int
 loadppm_from_file(FILE *rgb, FILE *alpha, struct ppm *ppm) {
 	ppm->buffer = NULL;
 	ppm->step = 0;
-	int rgb_id = 0;
+
+	int rgb_id = 0;            
 	int alpha_id = 0;
 	if (rgb) {
+		//! 读取 RGB 到ppm结构体
 		if (!ppm_header(rgb, ppm)) {
 			return 0;
 		}
-		rgb_id = ppm->type;
+
+		//! 
+		rgb_id = ppm->type; 
+
+		//! 步长 3 (RGB 占3个字节)
 		ppm->step += 3;
 	}
+
+	//! 读取 alpha通道 文件
 	if (alpha) {
 		if (rgb == NULL) {
 			if (!ppm_header(alpha, ppm)) {
@@ -140,6 +168,7 @@ loadppm_from_file(FILE *rgb, FILE *alpha, struct ppm *ppm) {
 			if (!ppm_header(alpha, &pgm)) {
 				return 0;
 			}
+			//! 检查 两个文件读取出来的信息是否匹配
 			if (ppm->depth != pgm.depth || ppm->width != pgm.width || ppm->height != pgm.height) {
 				return 0;
 			}
@@ -147,12 +176,16 @@ loadppm_from_file(FILE *rgb, FILE *alpha, struct ppm *ppm) {
 		}
 		ppm->step += 1;
 	}
+
+	//! 分配buffer 空间 (长度X宽度X每个像素步长)
 	ppm->buffer = (uint8_t *)malloc(ppm->height * ppm->width * ppm->step);
 	if (rgb) {
 		if (!ppm_data(ppm, rgb, rgb_id, 0))
 			return 0;
 	}
+
 	if (alpha) {
+		//! 如果有rgb文件 跳过3个像素
 		int skip = 0;
 		if (rgb) {
 			skip = 3;
@@ -163,6 +196,9 @@ loadppm_from_file(FILE *rgb, FILE *alpha, struct ppm *ppm) {
 
 	return 1;
 }
+
+//! for lua 
+//! 加载 ppm文件
 
 static int
 loadppm(lua_State *L) {
@@ -180,14 +216,20 @@ loadppm(lua_State *L) {
 
 	struct ppm ppm;
 
+	//! 从 rgb文件、alpha通道文件 加载 ppm 
 	int ok = loadppm_from_file(rgb, alpha, &ppm);
 
+	//! 关闭 rgb文件
 	if (rgb) {
 		fclose(rgb);
 	}
+
+	//! 关闭 alpha文件
 	if (alpha) {
 		fclose(alpha);
 	}
+
+	//! 
 	if (!ok) {
 		if (ppm.buffer) {
 			free(ppm.buffer);
@@ -195,8 +237,9 @@ loadppm(lua_State *L) {
 		luaL_error(L, "Invalid file %s", filename);
 	}
 
+	//! 深度
 	if (ppm.depth == 255) {
-		if (ppm.step == 4) {
+		if (ppm.step == 4) {                //! rgba 四通道 每个通道 8bit
 			lua_pushliteral(L, "RGBA8");
 		} else if (ppm.step == 3) {
 			lua_pushliteral(L, "RGB8");
@@ -204,7 +247,7 @@ loadppm(lua_State *L) {
 			lua_pushliteral(L, "ALPHA8");
 		}
 	} else {
-		if (ppm.step == 4) {
+		if (ppm.step == 4) {                //! rgba 四通道 每个通道 4bit
 			lua_pushliteral(L, "RGBA4");
 		} else if (ppm.step == 3) {
 			lua_pushliteral(L, "RGB4");
@@ -212,10 +255,13 @@ loadppm(lua_State *L) {
 			lua_pushliteral(L, "ALPHA4");
 		}
 	}
+
 	lua_pushinteger(L, ppm.width);
 	lua_pushinteger(L, ppm.height);
+
 	int n = ppm.width * ppm.height * ppm.step;
 	lua_createtable(L, n, 0);
+
 	int i;
 	for (i=0;i<n;i++) {
 		lua_pushinteger(L, ppm.buffer[i]);
@@ -225,9 +271,13 @@ loadppm(lua_State *L) {
 	return 4;
 }
 
+//! 加载 纹理
+
 static int
 loadtexture(lua_State *L) {
+	
 	int id = (int)luaL_checkinteger(L,1);
+
 	size_t sz = 0;
 	const char * filename = luaL_checklstring(L, 2, &sz);
 	ARRAY(char, tmp, sz + 5);
@@ -279,6 +329,8 @@ loadtexture(lua_State *L) {
 			free(ppm.buffer);
 			ppm.buffer = (uint8_t*)tmp;
 		} else if (ppm.step == 3) {
+			//!      10 9876543210
+			//! RRRRR G GGGGGBBBBB
 			type = TEXTURE_RGB565;
 			uint16_t * tmp = (uint16_t *)malloc(ppm.width * ppm.height * sizeof(uint16_t));
 			int i;
@@ -381,12 +433,15 @@ save_rgb(lua_State *L, int step, int depth) {
 	if (f == NULL) {
 		luaL_error(L, "Can't write to %s", tmp);
 	}
+	//! 写入文件头
 	fprintf(f, 
 		"P6\n"
 		"%d %d\n"
 		"%d\n"
 		, width, height, depth);
 	int i;
+
+	//! 图片内容写入buffer
 	uint8_t *buffer = (uint8_t *)malloc(width * height * 3);
 	for (i=0;i<width * height;i++) {
 		lua_rawgeti(L, 5, i*step+1);
@@ -420,9 +475,9 @@ save_alpha(lua_State *L, int step, int depth, int offset) {
 		luaL_error(L, "Can't write to %s", tmp);
 	}
 	fprintf(f, 
-		"P5\n"
-		"%d %d\n"
-		"%d\n"
+		"P5\n"                   //! 格式
+		"%d %d\n"                //! 唱度 宽度
+		"%d\n"                   //! 深度
 		, width, height, depth);
 	int i;
 	uint8_t *buffer = (uint8_t *)malloc(width * height);

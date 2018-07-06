@@ -28,18 +28,18 @@
 struct uniform {
 	int loc;
 	int offset;
-	enum UNIFORM_FORMAT type;
+	enum UNIFORM_FORMAT type;                //! uniform 格式
 };
 
 struct program {
 	RID prog;
 	struct material * material;
-	int texture_number;
-	int uniform_number;
-	struct uniform uniform[MAX_UNIFORM];
-	bool reset_uniform;
+	int texture_number;                       //! 纹理 张数
+	int uniform_number;                       //! uniform个数
+	struct uniform uniform[MAX_UNIFORM];      //! uniform数组 
+	bool reset_uniform;                       //! 是否重置uniform
 	bool uniform_change[MAX_UNIFORM];
-	float uniform_value[MAX_UNIFORM * 16];
+	float uniform_value[MAX_UNIFORM * 16];    //! uniform 的值
 };
 
 struct render_state {
@@ -68,11 +68,11 @@ shader_init() {
 
 	struct render_init_args RA;
 	// todo: config these args
-	RA.max_buffer = 128;
+	RA.max_buffer = 128;             //! 
 	RA.max_layout = 4;
 	RA.max_target = 128;
 	RA.max_texture = 256;
-	RA.max_shader = MAX_PROGRAM;
+	RA.max_shader = MAX_PROGRAM;      //! 最大shader数
 
 	int rsz = render_size(&RA);
 	rs->R = (struct render *)malloc(rsz);
@@ -416,12 +416,12 @@ shader_adduniform(int prog, const char * name, enum UNIFORM_FORMAT t) {
 }
 
 // material system
-
+//! 材质
 struct material {
-	struct program *p;
-	int texture[MAX_TEXTURE_CHANNEL];
-	bool uniform_enable[MAX_UNIFORM];
-	float uniform[1];
+	struct program *p;                      //! shader
+	int texture[MAX_TEXTURE_CHANNEL];       //! 纹理， 最大8张
+	bool uniform_enable[MAX_UNIFORM];       //! uniform 数据 
+	float uniform[1];                       //! 
 	bool reset;
 };
 

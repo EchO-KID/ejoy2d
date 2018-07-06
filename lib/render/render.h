@@ -89,6 +89,7 @@ enum CLEAR_MASK {
 	MASKS = 0x4,
 };
 
+//! uniform µÄ¸ñÊ½
 enum UNIFORM_FORMAT {
 	UNIFORM_INVALID = 0,
 	UNIFORM_FLOAT1,

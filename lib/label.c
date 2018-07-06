@@ -373,6 +373,7 @@ draw_line(const struct rich_text *rich, struct pack_label * l, struct srt *srt, 
         w = l->width;
     }
 
+	//! ¶ÔÆë
     switch (l->align) {
         case LABEL_ALIGN_LEFT:
             cx = 0.0;

@@ -91,6 +91,8 @@ struct shader {
 	int texture_uniform[MAX_TEXTURE];
 };
 
+
+//! äÖÈ¾×´Ì¬ render state
 struct rstate {
 	RID target;
 	enum BLEND_FORMAT blend_src;
@@ -98,7 +100,7 @@ struct rstate {
 	enum DEPTH_FORMAT depth;
 	enum CULL_MODE cull;
 	int depthmask;
-	int scissor;
+	int scissor;                      //! ¿ªÆô²Ã¼ô
 	RID texture[MAX_TEXTURE];
 };
 

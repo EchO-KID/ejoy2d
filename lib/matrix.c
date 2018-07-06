@@ -204,6 +204,7 @@ isind(int d) {
 	return icosd(1024 - d);
 }
 
+//! ¾ØÕóĞı×ª
 static inline void
 rot_mat(int *m, int d) {
 	if (d==0)
@@ -232,6 +233,7 @@ rot_mat(int *m, int d) {
 	m[5] = (m4_sind + m5_cosd) /1024;
 }
 
+//! ¾ØÕóËõ·Å
 static inline void
 scale_mat(int *m, int sx, int sy) {
 	if (sx != 1024) {

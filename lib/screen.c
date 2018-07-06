@@ -13,6 +13,7 @@ struct screen {
 static struct screen SCREEN;
 static struct render *R = NULL;
 
+//! 初始化 屏幕
 void 
 screen_initrender(struct render *r) {
 	R = r;
@@ -20,24 +21,28 @@ screen_initrender(struct render *r) {
 	screen_init(SCREEN.width, SCREEN.height, SCREEN.scale);
 }
 
+//! 
 void
 screen_init(float w, float h, float scale) {
 	SCREEN.width = (int)w;
 	SCREEN.height = (int)h;
 	SCREEN.scale = scale;
-	SCREEN.invw = 2.0f / SCREEN_SCALE / w;
-	SCREEN.invh = -2.0f / SCREEN_SCALE / h;
+	SCREEN.invw = 2.0f / SCREEN_SCALE / w;           //! view port width
+	SCREEN.invh = -2.0f / SCREEN_SCALE / h;          //! view port height
 	if (R) {
+		//! 设置 视口
 		render_setviewport(R, 0, 0, w * scale, h * scale );
 	}
 }
 
+//! transform screen
 void
 screen_trans(float *x, float *y) {
 	*x *= SCREEN.invw;
 	*y *= SCREEN.invh;
 }
 
+//! 
 void
 screen_scissor(int x, int y, int w, int h) {
 	y = SCREEN.height - y - h;
@@ -67,10 +72,13 @@ screen_scissor(int x, int y, int w, int h) {
 	render_setscissor(R,x,y,w,h);
 }
 
+//! 是否可见
 bool screen_is_visible(float x,float y)
 {
 	return x >= 0.0f && x <= 2.0f && y>=-2.0f && y<= 0.0f;
 }
+
+//! 没地方用到？
 bool screen_is_poly_invisible(const float* points,int len,int stride)
 {
 	int i =0;

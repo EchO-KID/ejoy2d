@@ -80,7 +80,7 @@ struct particle_config {
 	 - kParticleModeGravity: uses gravity, speed, radial and tangential acceleration
 	 - kParticleModeRadius: uses radius movement + rotation
 	 */
-	int emitterMode;
+	int emitterMode;                      //! 
 
 	union {
 		// Different modes
