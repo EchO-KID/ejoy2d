@@ -60,17 +60,17 @@ enum TEXTURE_FORMAT {
 
 enum BLEND_FORMAT {
 	BLEND_DISABLE = 0,
-	BLEND_ZERO,
-	BLEND_ONE,
-	BLEND_SRC_COLOR,
-	BLEND_ONE_MINUS_SRC_COLOR,
-	BLEND_SRC_ALPHA,
-	BLEND_ONE_MINUS_SRC_ALPHA,
-	BLEND_DST_ALPHA,
-	BLEND_ONE_MINUS_DST_ALPHA,
-	BLEND_DST_COLOR,
-	BLEND_ONE_MINUS_DST_COLOR,
-	BLEND_SRC_ALPHA_SATURATE,
+	BLEND_ZERO,                   //! 
+	BLEND_ONE,                    //! 
+	BLEND_SRC_COLOR,              //! 
+	BLEND_ONE_MINUS_SRC_COLOR,    //! 
+	BLEND_SRC_ALPHA,              //! 
+	BLEND_ONE_MINUS_SRC_ALPHA,    //! 
+	BLEND_DST_ALPHA,              //! 
+	BLEND_ONE_MINUS_DST_ALPHA,    //! 
+	BLEND_DST_COLOR,              //! 
+	BLEND_ONE_MINUS_DST_COLOR,    //! 
+	BLEND_SRC_ALPHA_SATURATE,     //! 
 };
 
 enum DEPTH_FORMAT {
@@ -84,9 +84,9 @@ enum DEPTH_FORMAT {
 };
 
 enum CLEAR_MASK {
-	MASKC = 0x1,
-	MASKD = 0x2,
-	MASKS = 0x4,
+	MASKC = 0x1,              //! 清除 颜色buffer 掩码
+	MASKD = 0x2,              //! 清除 深度buffer 掩码
+	MASKS = 0x4,              //! 清除 模板buffer 掩码
 };
 
 //! uniform 的格式

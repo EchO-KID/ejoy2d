@@ -35,6 +35,7 @@ matrix_mul(struct matrix *mm, const struct matrix *mm1, const struct matrix *mm2
 	m[5] = (m1[4] * m2[1] + m1[5] * m2[3]) /1024 + m2[5];
 }
 
+//! µ¥Î»¾ØÕó
 static inline void
 matrix_identity(struct matrix *mm) {
 	int *mat = mm->m;

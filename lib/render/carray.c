@@ -6,18 +6,20 @@
 #include "array.h"
 
 // align to qword
-#define ALIGN(n) (((n) + 7) & ~7)
+#define ALIGN(n) (((n) + 7) & ~7)            //! 
 
 struct array_node {
 	struct array_node * next;
 };
 
+//! 判断 array 的size 
 int 
 array_size(int n, int sz) {
-	sz = ALIGN(sz);
+	sz = ALIGN(sz);              //! 对齐
 	return n * sz;
 }
 
+//! 
 void 
 array_init(struct array *p, void * buffer, int n, int nsz) {
 	int sz = ALIGN(nsz);
@@ -56,6 +58,7 @@ array_free(struct array *p, void *v) {
 	}
 }
 
+//! 获取 v 在 数组p中的index位置
 int 
 array_id(struct array *p, void *v) {
 	if (v == NULL)
@@ -63,16 +66,17 @@ array_id(struct array *p, void *v) {
 	int idx = ((char *)v - p->buffer) / p->sz;
 	assert(idx >= 0 && idx < p->n);
 
-	return idx + 1;
+	return idx + 1;                           //! +1 maybe for lua
 }
 
+//! 访问array中第id个元素
 void * 
 array_ref(struct array *p, int id) {
 	if (id == 0)
 		return NULL;
-	--id;
+	--id;                                         //! review 这里减一 是为了配合lua?
 	assert(id >= 0 && id < p->n);
-	void * ptr = p->buffer + p->sz * id;
+	void * ptr = p->buffer + p->sz * id; 
 	return ptr;
 }
 

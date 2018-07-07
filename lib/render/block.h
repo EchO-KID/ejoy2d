@@ -3,9 +3,10 @@
 
 #include <stdlib.h>
 
+//! 块数据
 struct block {
-	char * buffer;
-	int sz;
+	char * buffer;       //! buffer
+	int sz;              //! 块数据大小
 };
 
 static inline void 
@@ -14,6 +15,7 @@ block_init(struct block * B, void * buffer, int sz) {
 	B->sz = sz;
 }
 
+//! 剔除 buffer 中的sz(前面部分)
 static inline void * 
 block_slice(struct block * B, int sz) {
 	if (B->sz < sz) {

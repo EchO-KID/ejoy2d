@@ -501,23 +501,23 @@ draw_child(struct sprite *s, struct srt *srt, struct sprite_trans * ts, struct m
 	if (s->material) {
 		material = s->material;
 	} 
-	switch (s->type) {
-	case TYPE_PICTURE:
+	switch (s->type) {                                       //!  
+	case TYPE_PICTURE:                                       //! Í¼Æ¬
 		switch_program(t, PROGRAM_PICTURE, material);
 		sprite_drawquad(s->s.pic, srt, t);
 		return 0;
-	case TYPE_POLYGON:
+	case TYPE_POLYGON:                                       //! ¶à±ßÐÎ
 		switch_program(t, PROGRAM_PICTURE, material);
 		sprite_drawpolygon(s->pack, s->s.poly, srt, t);
 		return 0;
-	case TYPE_LABEL:
+	case TYPE_LABEL:                                          //! label
 		if (s->data.rich_text) {
 			t->program = PROGRAM_DEFAULT;	// label never set user defined program
 			switch_program(t, s->s.label->edge ? PROGRAM_TEXT_EDGE : PROGRAM_TEXT, material);
 			label_draw(s->data.rich_text, s->s.label, srt, t);
 		}
 		return 0;
-	case TYPE_ANCHOR:
+	case TYPE_ANCHOR:                                           //! Ãªµã£¿
 		if (s->data.anchor->ps){
 			switch_program(t, PROGRAM_PICTURE, material);
 			drawparticle(s, s->data.anchor->ps, s->data.anchor->pic, srt);

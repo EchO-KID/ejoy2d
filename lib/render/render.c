@@ -79,7 +79,7 @@ struct attrib_layout {
 };
 
 struct shader {
-	GLuint glid;
+	GLuint glid;                 //! 
 #ifdef VAO_ENABLE
 	GLuint glvao;
 	RID vbslot[MAX_VB_SLOT];
@@ -113,7 +113,7 @@ struct render {
 	GLint default_framebuffer;
 	struct rstate current;
 	struct rstate last;
-	struct log log;
+	struct log log;          //! 日志
 	struct array buffer;
 	struct array attrib;
 	struct array target;
@@ -151,6 +151,9 @@ render_buffer_create(struct render *R, enum RENDER_OBJ what, const void *data, i
 	default:
 		return 0;
 	}
+
+	//! 
+
 	struct buffer * buf = (struct buffer *)array_alloc(&R->buffer);
 	if (buf == NULL)
 		return 0;
@@ -183,10 +186,11 @@ render_buffer_update(struct render *R, RID id, const void * data, int n) {
 	CHECK_GL_ERROR
 }
 
+//! 
 static void
 close_buffer(void *p, void *R) {
 	struct buffer * buf = (struct buffer *)p;
-	glDeleteBuffers(1,&buf->glid);
+	glDeleteBuffers(1, &buf->glid);
 
 	CHECK_GL_ERROR
 }
@@ -208,6 +212,8 @@ render_register_vertexlayout(struct render *R, int n, struct vertex_attrib * att
 	return id;
 }
 
+//! 编译shader
+
 static GLuint
 compile(struct render *R, const char * source, int type) {
 	GLint status;
@@ -216,8 +222,8 @@ compile(struct render *R, const char * source, int type) {
 	glShaderSource(shader, 1, &source, NULL);
 	glCompileShader(shader);
 	
+	//! 检查是否编译成功
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-	
 	if (status == GL_FALSE) {
 		char buf[1024];
 		GLint len;
@@ -235,19 +241,19 @@ compile(struct render *R, const char * source, int type) {
 	return shader;
 }
 
+//! 链接 shader program
 static int
 link(struct render *R, GLuint prog) {
 	GLint status;
 	glLinkProgram(prog);
-	
+
+	//! 检查是否link成功
 	glGetProgramiv(prog, GL_LINK_STATUS, &status);
 	if (status == 0) {
 		char buf[1024];
 		GLint len;
 		glGetProgramInfoLog(prog, 1024, &len, buf);
-
 		log_printf(&R->log, "link failed:%s\n", buf);
-
 		return 0;
 	}
 
@@ -256,8 +262,11 @@ link(struct render *R, GLuint prog) {
 	return 1;
 }
 
+//! 编译 链接 shader 程序
 static int
 compile_link(struct render *R, struct shader *s, const char * VS, const char *FS) {
+
+	//! 编译  fragment shader
 	GLuint fs = compile(R, FS, GL_FRAGMENT_SHADER);
 	if (fs == 0) {
 		log_printf(&R->log, "Can't compile fragment shader");
@@ -266,6 +275,7 @@ compile_link(struct render *R, struct shader *s, const char * VS, const char *FS
 		glAttachShader(s->glid, fs);
 	}
 	
+	//! 编译 vertext shader
 	GLuint vs = compile(R, VS, GL_VERTEX_SHADER);
 	if (vs == 0) {
 		log_printf(&R->log, "Can't compile vertex shader");
@@ -274,9 +284,12 @@ compile_link(struct render *R, struct shader *s, const char * VS, const char *FS
 		glAttachShader(s->glid, vs);
 	}
 
+
+	//! 没有使用 layout
 	if (R->attrib_layout == 0)
 		return 0;
 
+	//! 
 	struct attrib * a = (struct attrib *)array_ref(&R->attrib, R->attrib_layout);
 	s->n = a->n;
 	int i;
@@ -288,15 +301,15 @@ compile_link(struct render *R, struct shader *s, const char * VS, const char *FS
 		al->offset = va->offset;
 		al->size = va->n;
 		switch (va->size) {
-		case 1:
+		case 1:                             //! 一个字节
 			al->type = GL_UNSIGNED_BYTE;
 			al->normalized = GL_TRUE;
 			break;
-		case 2:
+		case 2:                             //! 两个字节
 			al->type = GL_UNSIGNED_SHORT;
 			al->normalized = GL_TRUE;
 			break;
-		case 4:
+		case 4:                             //! 4个字节
 			al->type = GL_FLOAT;
 			al->normalized = GL_FALSE;
 			break;
@@ -305,9 +318,11 @@ compile_link(struct render *R, struct shader *s, const char * VS, const char *FS
 		}
 	}
 
+	//! 链接 shader program
 	return link(R, s->glid);
 }
 
+//! shader 
 RID 
 render_shader_create(struct render *R, struct shader_init_args *args) {
 	struct shader * s = (struct shader *)array_alloc(&R->shader);
@@ -409,6 +424,8 @@ render_release(struct render *R, enum RENDER_OBJ what, RID id) {
 	}
 }
 
+
+//! 
 void 
 render_set(struct render *R, enum RENDER_OBJ what, RID id, int slot) {
 	switch (what) {
@@ -1004,13 +1021,15 @@ render_state_reset(struct render *R) {
 // draw
 void 
 render_draw(struct render *R, enum DRAW_MODE mode, int fromidx, int ni) {
+
 	static int draw_mode[] = {
 		GL_TRIANGLES,
 		GL_LINES,
 	};
-	assert((int)mode < sizeof(draw_mode)/sizeof(int));
-	render_state_commit(R);
-	RID ib = R->indexbuffer;
+	assert((int)mode < sizeof(draw_mode)/sizeof(int));                      //! 断言 draw_mode 是否合法
+
+	render_state_commit(R);                                                 //! 提交渲染状态
+	RID ib = R->indexbuffer;                                                //! 索引buffer
 	struct buffer * buf = (struct buffer *)array_ref(&R->buffer, ib);
 	if (buf) {
 		assert(fromidx + ni <= buf->n);
@@ -1026,9 +1045,12 @@ render_draw(struct render *R, enum DRAW_MODE mode, int fromidx, int ni) {
 	}
 }
 
+//! 
 void
 render_clear(struct render *R, enum CLEAR_MASK mask, unsigned long c) {
 	GLbitfield m = 0;
+
+	//! 重置 颜色
 	if (mask & MASKC) {
 		m |= GL_COLOR_BUFFER_BIT;
 		float a = ((c >> 24) & 0xff ) / 255.0;
@@ -1037,19 +1059,23 @@ render_clear(struct render *R, enum CLEAR_MASK mask, unsigned long c) {
 		float b = ((c >> 0) & 0xff ) / 255.0;
 		glClearColor(r,g,b,a);
 	}
+
+	//! 重置 深度
 	if (mask & MASKD) {
 		m |= GL_DEPTH_BUFFER_BIT;
 	}
+
+	//! 重置 模板 buffer
 	if (mask & MASKS) {
 		m |= GL_STENCIL_BUFFER_BIT;
 	}
-	render_state_commit(R);
+	render_state_commit(R);                 //! 向openGl 提交 渲染状态
 	glClear(m);
 
 	CHECK_GL_ERROR
 }
 
-// uniform
+// 从shader中获取 名字为name的uniform id
 int 
 render_shader_locuniform(struct render *R, const char * name) {
 	struct shader * s = (struct shader *)array_ref(&R->shader, R->program);
@@ -1062,6 +1088,7 @@ render_shader_locuniform(struct render *R, const char * name) {
 	}
 }
 
+//! shader 设置 uniform
 void 
 render_shader_setuniform(struct render *R, int loc, enum UNIFORM_FORMAT format, const float *v) {
 	switch(format) {

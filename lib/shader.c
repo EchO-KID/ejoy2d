@@ -66,28 +66,29 @@ shader_init() {
 	struct render_state * rs = (struct render_state *) malloc(sizeof(*rs));
 	memset(rs, 0 , sizeof(*rs));
 
+	//! 渲染  初始化  args
 	struct render_init_args RA;
 	// todo: config these args
-	RA.max_buffer = 128;             //! 
+	RA.max_buffer = 128;              //! 
 	RA.max_layout = 4;
 	RA.max_target = 128;
 	RA.max_texture = 256;
 	RA.max_shader = MAX_PROGRAM;      //! 最大shader数
 
-	int rsz = render_size(&RA);
-	rs->R = (struct render *)malloc(rsz);
-	rs->R = render_init(&RA, rs->R, rsz);
+	int rsz = render_size(&RA);             //! 分配 渲染 size
+	rs->R = (struct render *)malloc(rsz);   //! 分配 rsz
+	rs->R = render_init(&RA, rs->R, rsz);   //!  
 	texture_initrender(rs->R);
-	screen_initrender(rs->R);
-	label_initrender(rs->R);
-	lsprite_initrender(rs->R);
+	screen_initrender(rs->R);               //! 初始化 视口
+	label_initrender(rs->R);                //! label
+	lsprite_initrender(rs->R);              //! sprite
 	renderbuffer_initrender(rs->R);
 
 	rs->current_program = -1;
 	rs->blendchange = 0;
-	render_setblend(rs->R, BLEND_ONE, BLEND_ONE_MINUS_SRC_ALPHA);
+	render_setblend(rs->R, BLEND_ONE, BLEND_ONE_MINUS_SRC_ALPHA);      //! 设置混合模式
 
-	uint16_t idxs[6 * MAX_COMMBINE];
+	uint16_t idxs[6 * MAX_COMMBINE];                                   //! 定点数量  每个四边形 6个索引
 	int i;
 	for (i=0;i<MAX_COMMBINE;i++) {
 		idxs[i*6] = i*4;
@@ -98,14 +99,15 @@ shader_init() {
 		idxs[i*6+5] = i*4+3;
 	}
 	
-	rs->index_buffer = render_buffer_create(rs->R, INDEXBUFFER, idxs, 6 * MAX_COMMBINE, sizeof(uint16_t));
-	rs->vertex_buffer = render_buffer_create(rs->R, VERTEXBUFFER, NULL,  4 * MAX_COMMBINE, sizeof(struct vertex));
+	rs->index_buffer = render_buffer_create(rs->R, INDEXBUFFER, idxs, 6 * MAX_COMMBINE, sizeof(uint16_t));                   //! index buffer 存储 画顶点的索引数组
+	rs->vertex_buffer = render_buffer_create(rs->R, VERTEXBUFFER, NULL,  4 * MAX_COMMBINE, sizeof(struct vertex));           //! 存储顶点
 
-	struct vertex_attrib va[4] = {
-		{ "position", 0, 2, sizeof(float), BUFFER_OFFSET(vp.vx) },
-		{ "texcoord", 0, 2, sizeof(uint16_t), BUFFER_OFFSET(vp.tx) },
-		{ "color", 0, 4, sizeof(uint8_t), BUFFER_OFFSET(rgba) },
-		{ "additive", 0, 4, sizeof(uint8_t), BUFFER_OFFSET(add) },
+	//! 
+	struct vertex_attrib va[4] = { 
+		{ "position", 0, 2, sizeof(float),    BUFFER_OFFSET(vp.vx) },        //! 顶点坐标
+		{ "texcoord", 0, 2, sizeof(uint16_t), BUFFER_OFFSET(vp.tx) },        //! 纹理uv
+		{ "color",    0, 4, sizeof(uint8_t), BUFFER_OFFSET(rgba) },          //! 颜色
+		{ "additive", 0, 4, sizeof(uint8_t), BUFFER_OFFSET(add) },           //! review 这个additive用来干嘛的？
 	};
 	rs->layout = render_register_vertexlayout(rs->R, sizeof(va)/sizeof(va[0]), va);
 	render_set(rs->R, VERTEXLAYOUT, rs->layout, 0);
@@ -237,6 +239,7 @@ shader_drawbuffer(struct render_buffer * rb, float tx, float ty, float scale) {
 	render_set(RS->R, VERTEXBUFFER, RS->vertex_buffer, 0);
 }
 
+//! 设置 shader 使用的纹理
 void
 shader_texture(int id, int channel) {
 	assert(channel < MAX_TEXTURE_CHANNEL);
@@ -324,6 +327,7 @@ shader_defaultblend() {
 	}
 }
 
+//! shader 设置 混合
 void
 shader_blend(int m1, int m2) {
 	if (m1 != BLEND_GL_ONE || m2 != BLEND_GL_ONE_MINUS_SRC_ALPHA) {
