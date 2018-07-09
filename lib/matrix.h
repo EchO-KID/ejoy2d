@@ -50,11 +50,11 @@ matrix_identity(struct matrix *mm) {
 int matrix_inverse(const struct matrix *mm, struct matrix *mo);
 
 struct srt {
-	int offx;
+	int offx;      //! Æ«ÒÆ
 	int offy;
-	int scalex;
+	int scalex;    //! Ëõ·Å
 	int scaley;
-	int rot;
+	int rot;       //! Ðý×ª
 };
 
 void matrix_srt(struct matrix *mm, const struct srt *srt);

@@ -46,8 +46,8 @@ struct pack_label {
 
 struct pack_quad {
 	int texid;
-	uv_t texture_coord[8];
-	int32_t screen_coord[8];
+	uv_t texture_coord[8];          //! ÎÆÀíuv          4*8 Bytes
+	int32_t screen_coord[8];        //! ÆÁÄ»×ø±ê (x,y)  8*8 Bytes 
 };
 
 #define SIZEOF_QUAD (sizeof(struct pack_quad))
@@ -76,10 +76,10 @@ struct pack_polygon_data {
 #define SIZEOF_POLYGON (sizeof(struct pack_polygon_data) - sizeof(struct pack_poly_data))
 
 struct sprite_trans {
-	struct matrix * mat;
-	uint32_t color;
+	struct matrix * mat;      //! sprite ¾ØÕó
+	uint32_t color;         
 	uint32_t additive;
-	int program;
+	int program;              //! shader
 };
 
 struct sprite_trans_data {
@@ -120,6 +120,7 @@ struct pack_component {
 
 #define SIZEOF_COMPONENT (sizeof(struct pack_component))
 
+//! ¶¯»­ pack
 struct pack_animation {
 	offset_t frame;	// struct pack_frame *
 	offset_t action;	// struct pack_action *

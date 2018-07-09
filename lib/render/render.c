@@ -600,18 +600,17 @@ apply_va(struct render *R) {
 	}
 }
 
-// texture
-
+// 计算纹理的字节数
 static int
 calc_texture_size(enum TEXTURE_FORMAT format, int width, int height) {
 	switch( format ) {
 	case TEXTURE_RGBA8 :
-		return width * height * 4;
+		return width * height * 4;             //! 四个字节
 	case TEXTURE_RGB565:
 	case TEXTURE_RGBA4 :
-		return width * height * 2;
+		return width * height * 2;             //! 两个字节
 	case TEXTURE_RGB:
-		return width * height * 3;
+		return width * height * 3;             //! 
 	case TEXTURE_A8 :
 	case TEXTURE_DEPTH :
 		return width * height;
@@ -650,6 +649,7 @@ render_texture_create(struct render *R, int width, int height, enum TEXTURE_FORM
 	return array_id(&R->texture, tex);
 }
 
+//! 绑定纹理
 static void
 bind_texture(struct render *R, struct texture * tex, int slice, GLenum *type, int *target) {
 	if (tex->type == TEXTURE_2D) {
@@ -666,7 +666,7 @@ bind_texture(struct render *R, struct texture * tex, int slice, GLenum *type, in
 	glBindTexture( *type, tex->glid);
 }
 
-// return compressed
+// 是否是压缩纹理
 static int
 texture_format(struct texture * tex, GLint *pf, GLenum *pt) {
 	GLuint format = 0;
@@ -725,6 +725,7 @@ texture_format(struct texture * tex, GLint *pf, GLenum *pt) {
 	return compressed;
 }
 
+//! 
 void
 render_texture_update(struct render *R, RID id, int width, int height, const void *pixels, int slice, int miplevel) {
 	struct texture * tex = (struct texture *)array_ref(&R->texture, id);

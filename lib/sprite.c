@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <limits.h>
 
+//! 
 void
 sprite_drawquad(struct pack_picture *picture, const struct srt *srt,  const struct sprite_trans *arg) {
 	struct matrix tmp;
@@ -29,37 +30,45 @@ sprite_drawquad(struct pack_picture *picture, const struct srt *srt,  const stru
 	int *m = tmp.m;
 	for (i=0;i<picture->n;i++) {
 		struct pack_quad *q = &picture->rect[i];
+
+		//! 获取纹理id
 		int glid = texture_glid(q->texid);
 		if (glid == 0)
 			continue;
+
+		//! 设置纹理id
 		shader_texture(glid, 0);
+
 		for (j=0;j<4;j++) {
-			int xx = q->screen_coord[j*2+0];
-			int yy = q->screen_coord[j*2+1];
-			float vx = (xx * m[0] + yy * m[2]) / 1024 + m[4];
+			int xx = q->screen_coord[j*2+0];                            //! 屏幕坐标X
+			int yy = q->screen_coord[j*2+1];                            //! 屏幕坐标Y
+			float vx = (xx * m[0] + yy * m[2]) / 1024 + m[4];           //! 
 			float vy = (xx * m[1] + yy * m[3]) / 1024 + m[5];
 			float tx = q->texture_coord[j*2+0];
 			float ty = q->texture_coord[j*2+1];
 
-			screen_trans(&vx,&vy);
+			screen_trans(&vx,&vy);                                      //! 
 			vb[j].vx = vx;
 			vb[j].vy = vy;
 			vb[j].tx = tx;
 			vb[j].ty = ty;
 		}
-		shader_draw(vb, arg->color, arg->additive);
+		shader_draw(vb, arg->color, arg->additive);                     //! 
 	}
 }
 
+//! 多边形
 void
 sprite_drawpolygon(struct sprite_pack *pack, struct pack_polygon_data *poly, const struct srt *srt, const struct sprite_trans *arg) {
 	struct matrix tmp;
+
 	int i,j;
 	if (arg->mat == NULL) {
-		matrix_identity(&tmp);
+		matrix_identity(&tmp);            //! 单位矩阵
 	} else {
 		tmp = *arg->mat;
 	}
+
 	matrix_srt(&tmp, srt);
 	int *m = tmp.m;
 	for (i=0;i<poly->n;i++) {
@@ -78,7 +87,6 @@ sprite_drawpolygon(struct sprite_pack *pack, struct pack_polygon_data *poly, con
 		for (j=0;j<pn;j++) {
 			int xx = screen_coord[j*2+0];
 			int yy = screen_coord[j*2+1];
-
 
 			float vx = (xx * m[0] + yy * m[2]) / 1024 + m[4];
 			float vy = (xx * m[1] + yy * m[3]) / 1024 + m[5];
@@ -631,6 +639,7 @@ sprite_pos(struct sprite *s, struct srt *srt, struct matrix *m, int pos[2]) {
 
 }
 
+//! 
 void
 sprite_matrix(struct sprite * self, struct matrix *mat) {
 	struct sprite * parent = self->parent;
@@ -646,6 +655,8 @@ sprite_matrix(struct sprite * self, struct matrix *mat) {
 		if (frame < 0) {
 			return;
 		}
+
+		//! 
 		struct pack_frame * pf = OFFSET_TO_POINTER(struct pack_frame, parent->pack, ani->frame);
 		pf = &pf[frame];
 		int i;
