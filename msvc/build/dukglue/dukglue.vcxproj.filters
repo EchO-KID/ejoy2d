@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="tests">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="dukglue">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\dukglue\tests\duk_config.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\tests\duktape.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\tests\test_assert.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_class_proto.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_constructor.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_function.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_method.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_primitive_types.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_refs.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_stack.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_traits.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_typeinfo.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_types.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\dukexception.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\dukglue.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\dukvalue.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\public_util.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\register_class.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\register_function.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dukglue\dukglue\register_property.h">
+      <Filter>dukglue</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\dukglue\tests\duktape.c">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dukglue\tests\main.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dukglue\tests\test_assert.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dukglue\tests\test_classes.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dukglue\tests\test_dukvalue.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dukglue\tests\test_inheritance.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dukglue\tests\test_multiple_contexts.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dukglue\tests\test_primitives.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dukglue\tests\test_properties.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

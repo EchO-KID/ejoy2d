@@ -11,10 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{029E13FB-276A-4B6F-8346-00F3072734E7}</ProjectGuid>
+    <ProjectGuid>{CD9B2C1E-2D05-4A13-B78A-51CF03072C55}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>lua</RootNamespace>
-    <ProjectName>lua</ProjectName>
+    <RootNamespace>dukglue</RootNamespace>
+    <ProjectName>dukglue</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,7 +42,9 @@
     <Import Project="..\ejoy2d.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>F:\workspace\ejoy2d\dukglue\tests;F:\workspace\ejoy2d\dukglue;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -79,69 +81,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\lua\lapi.h" />
-    <ClInclude Include="..\..\..\lua\lauxlib.h" />
-    <ClInclude Include="..\..\..\lua\lcode.h" />
-    <ClInclude Include="..\..\..\lua\lctype.h" />
-    <ClInclude Include="..\..\..\lua\ldebug.h" />
-    <ClInclude Include="..\..\..\lua\ldo.h" />
-    <ClInclude Include="..\..\..\lua\lfunc.h" />
-    <ClInclude Include="..\..\..\lua\lgc.h" />
-    <ClInclude Include="..\..\..\lua\llex.h" />
-    <ClInclude Include="..\..\..\lua\llimits.h" />
-    <ClInclude Include="..\..\..\lua\lmem.h" />
-    <ClInclude Include="..\..\..\lua\lobject.h" />
-    <ClInclude Include="..\..\..\lua\lopcodes.h" />
-    <ClInclude Include="..\..\..\lua\lparser.h" />
-    <ClInclude Include="..\..\..\lua\lstate.h" />
-    <ClInclude Include="..\..\..\lua\lstring.h" />
-    <ClInclude Include="..\..\..\lua\ltable.h" />
-    <ClInclude Include="..\..\..\lua\ltm.h" />
-    <ClInclude Include="..\..\..\lua\lua.h" />
-    <ClInclude Include="..\..\..\lua\lua.hpp" />
-    <ClInclude Include="..\..\..\lua\luaconf.h" />
-    <ClInclude Include="..\..\..\lua\lualib.h" />
-    <ClInclude Include="..\..\..\lua\lundump.h" />
-    <ClInclude Include="..\..\..\lua\lvm.h" />
-    <ClInclude Include="..\..\..\lua\lzio.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_class_proto.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_constructor.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_function.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_method.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_primitive_types.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_refs.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_stack.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_traits.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_typeinfo.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\detail_types.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\dukexception.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\dukglue.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\dukvalue.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\public_util.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\register_class.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\register_function.h" />
+    <ClInclude Include="..\..\..\dukglue\dukglue\register_property.h" />
+    <ClInclude Include="..\..\..\dukglue\tests\duktape.h" />
+    <ClInclude Include="..\..\..\dukglue\tests\duk_config.h" />
+    <ClInclude Include="..\..\..\dukglue\tests\test_assert.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\lua\lapi.c" />
-    <ClCompile Include="..\..\..\lua\lauxlib.c" />
-    <ClCompile Include="..\..\..\lua\lbaselib.c" />
-    <ClCompile Include="..\..\..\lua\lbitlib.c" />
-    <ClCompile Include="..\..\..\lua\lcode.c" />
-    <ClCompile Include="..\..\..\lua\lcorolib.c" />
-    <ClCompile Include="..\..\..\lua\lctype.c" />
-    <ClCompile Include="..\..\..\lua\ldblib.c" />
-    <ClCompile Include="..\..\..\lua\ldebug.c" />
-    <ClCompile Include="..\..\..\lua\ldo.c" />
-    <ClCompile Include="..\..\..\lua\ldump.c" />
-    <ClCompile Include="..\..\..\lua\lfunc.c" />
-    <ClCompile Include="..\..\..\lua\lgc.c" />
-    <ClCompile Include="..\..\..\lua\linit.c" />
-    <ClCompile Include="..\..\..\lua\liolib.c" />
-    <ClCompile Include="..\..\..\lua\llex.c" />
-    <ClCompile Include="..\..\..\lua\lmathlib.c" />
-    <ClCompile Include="..\..\..\lua\lmem.c" />
-    <ClCompile Include="..\..\..\lua\loadlib.c" />
-    <ClCompile Include="..\..\..\lua\lobject.c" />
-    <ClCompile Include="..\..\..\lua\lopcodes.c" />
-    <ClCompile Include="..\..\..\lua\loslib.c" />
-    <ClCompile Include="..\..\..\lua\lparser.c" />
-    <ClCompile Include="..\..\..\lua\lstate.c" />
-    <ClCompile Include="..\..\..\lua\lstring.c" />
-    <ClCompile Include="..\..\..\lua\lstrlib.c" />
-    <ClCompile Include="..\..\..\lua\ltable.c" />
-    <ClCompile Include="..\..\..\lua\ltablib.c" />
-    <ClCompile Include="..\..\..\lua\ltm.c" />
-    <ClCompile Include="..\..\..\lua\lundump.c" />
-    <ClCompile Include="..\..\..\lua\lutf8lib.c" />
-    <ClCompile Include="..\..\..\lua\lvm.c" />
-    <ClCompile Include="..\..\..\lua\lzio.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\dukglue\dukglue.vcxproj" />
+    <ClCompile Include="..\..\..\dukglue\tests\duktape.c" />
+    <ClCompile Include="..\..\..\dukglue\tests\main.cpp" />
+    <ClCompile Include="..\..\..\dukglue\tests\test_assert.cpp" />
+    <ClCompile Include="..\..\..\dukglue\tests\test_classes.cpp" />
+    <ClCompile Include="..\..\..\dukglue\tests\test_dukvalue.cpp" />
+    <ClCompile Include="..\..\..\dukglue\tests\test_inheritance.cpp" />
+    <ClCompile Include="..\..\..\dukglue\tests\test_multiple_contexts.cpp" />
+    <ClCompile Include="..\..\..\dukglue\tests\test_primitives.cpp" />
+    <ClCompile Include="..\..\..\dukglue\tests\test_properties.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
